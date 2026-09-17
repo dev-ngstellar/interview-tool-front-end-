@@ -650,7 +650,7 @@ export default function StudentAssessmentPage() {
         new CustomEvent('assessment-header-update', {
           detail: {
             isActive: true,
-            roundTitle: 'ROUND 1 • APTITUDE ASSESSMENT',
+            roundTitle: 'ROUND 1 • Aptitude Assessment',
             timeRemaining: formattedTime,
             isUrgent,
             isWarning,
@@ -1562,7 +1562,7 @@ export default function StudentAssessmentPage() {
             border: '1px solid #E5E7EB',
           }}
         >
-          <span>{position.toUpperCase()} • ROUND 1</span>
+          <span>MARKETING EXECUTIVE</span>
         </div>
 
         <h1
@@ -1574,11 +1574,11 @@ export default function StudentAssessmentPage() {
             color: '#111827',
           }}
         >
-          Aptitude Assessment
+          ROUND 1 — APTITUDE ASSESSMENT
         </h1>
 
         <p style={{ fontSize: '1.05rem', color: '#4b5563' }}>
-          Test your numerical, logical and analytical reasoning skills.
+          Speed and accuracy assessment covering quantitative reasoning and logical deduction.
         </p>
       </div>
 
@@ -1586,7 +1586,7 @@ export default function StudentAssessmentPage() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: '1.25rem',
           marginBottom: '2rem',
         }}
@@ -1629,7 +1629,7 @@ export default function StudentAssessmentPage() {
           >
             Duration
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#111827' }}>{durationMinutes} Minutes</div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#111827' }}>15 Minutes</div>
           <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
             Strict server countdown
           </div>
@@ -1673,7 +1673,7 @@ export default function StudentAssessmentPage() {
           >
             Questions
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#111827' }}>{totalQuestionsCount} Questions</div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#111827' }}>15</div>
           <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
             Numerical & logical aptitude
           </div>
@@ -1717,9 +1717,9 @@ export default function StudentAssessmentPage() {
           >
             Passing Score
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#111827' }}>{passPercentage}%</div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#111827' }}>80%</div>
           <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-            Benchmark for Round 2
+            12 / 15 to pass
           </div>
         </div>
 
@@ -1805,7 +1805,7 @@ export default function StudentAssessmentPage() {
           >
             Total Marks
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#111827' }}>{totalMarks}</div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#111827' }}>15</div>
           <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
             1 mark per question
           </div>
@@ -1826,7 +1826,7 @@ export default function StudentAssessmentPage() {
           }}
         >
           <ShieldAlert size={18} color="var(--accent-primary)" />
-          <span>Before you begin:</span>
+          <span>Instructions:</span>
         </h3>
 
         <ul
@@ -1840,15 +1840,14 @@ export default function StudentAssessmentPage() {
             lineHeight: 1.6,
           }}
         >
-          <li>The assessment contains 15 aptitude questions.</li>
-          <li>You have 15 minutes to complete the assessment.</li>
+          <li>Complete all 15 questions.</li>
           <li>Each question carries 1 mark.</li>
-          <li>Navigation is strictly forward-only. You cannot return to previous questions.</li>
-          <li>Once you select an option, your answer is saved and locked permanently.</li>
-          <li>You must answer the current question before continuing to the next question.</li>
-          <li>The timer starts only after you click &quot;Start Assessment&quot;.</li>
-          <li>If the timer expires, the assessment will be submitted automatically.</li>
-          <li>The assessment is evaluated automatically upon submission.</li>
+          <li>You can change the answer only for the current question.</li>
+          <li>Clicking Next locks the current question.</li>
+          <li>Previous questions cannot be revisited or changed.</li>
+          <li>Timer starts only after clicking START ASSESSMENT.</li>
+          <li>Timer expiry automatically submits the assessment.</li>
+          <li>Submission locks the assessment.</li>
         </ul>
       </div>
 

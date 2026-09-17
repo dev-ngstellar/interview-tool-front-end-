@@ -152,7 +152,8 @@ export default function CandidateRegistrationPage() {
     const fieldOrder = ['fullName', 'studentId', 'email', 'phone'];
 
     for (const field of fieldOrder) {
-      const err = validateField(field, formData[field as keyof typeof formData]);
+      const val = formData[field as keyof typeof formData];
+      const err = validateField(field, typeof val === 'string' ? val : '');
       if (err) {
         newErrors[field] = err;
       }

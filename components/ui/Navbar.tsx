@@ -144,7 +144,7 @@ export function Navbar() {
                     lineHeight: 1.2,
                   }}
                 >
-                  Marketing Executive Drive
+                  NG Stellar
                 </div>
                 <div style={{ fontSize: '0.74rem', color: '#6b7280', lineHeight: 1.2 }}>
                   Campus Recruitment Assessment
@@ -190,7 +190,7 @@ export function Navbar() {
                     lineHeight: 1.2,
                   }}
                 >
-                  Marketing Executive Drive
+                  NG Stellar
                 </div>
                 <div style={{ fontSize: '0.74rem', color: isCandidateRoute ? '#6b7280' : 'var(--text-muted)', lineHeight: 1.2 }}>
                   {isAdminRoute ? 'Admin Portal & Governance' : 'Campus Recruitment Assessment'}
