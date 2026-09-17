@@ -470,9 +470,88 @@ body:has(.candidate-light-theme)::before {
 }
 
 @media (max-width: 680px) {
-
   .candidate-grid-2,
   .candidate-grid-3 {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ==============================================================================
+ * ADMIN PORTAL FIXED LAYOUT & INDEPENDENT SCROLLING
+ * ============================================================================== */
+
+.admin-layout-root {
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  background-color: #F8FAFC;
+  overflow: hidden;
+  width: 100vw;
+  max-width: 100vw;
+}
+
+.admin-main-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.admin-scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Polished scrollbar styling for admin scrollable content */
+.admin-scrollable-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.admin-scrollable-content::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+.admin-scrollable-content::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+.admin-scrollable-content::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Admin Sidebar scrollbar */
+.admin-sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.admin-sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.admin-sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 3px;
+}
+.admin-sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
+
+@media (max-width: 768px) {
+  .admin-desktop-sidebar {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .admin-mobile-sidebar-backdrop,
+  .admin-mobile-sidebar-drawer,
+  .admin-mobile-menu-btn {
+    display: none !important;
   }
 }

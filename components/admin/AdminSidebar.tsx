@@ -9,10 +9,19 @@ import {
   Briefcase,
   LogOut,
   ShieldCheck,
+  X,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
-export const AdminSidebar: React.FC = () => {
+interface AdminSidebarProps {
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
+}
+
+export const AdminSidebar: React.FC<AdminSidebarProps> = ({
+  isMobileOpen,
+  onCloseMobile,
+}) => {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
@@ -49,22 +58,79 @@ export const AdminSidebar: React.FC = () => {
     },
   ];
 
-  return (
-    <aside
-      style={{
-        width: '240px',
-        backgroundColor: '#FFFFFF',
-        borderRight: '1px solid #E5E7EB',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        flexShrink: 0,
-        minHeight: 'calc(100vh - 64px)',
-        padding: '1.25rem 0.85rem',
-      }}
-    >
+  const renderSidebarContent = (isMobileView = false) => (
+    <>
       <div>
-        <div style={{ padding: '0 0.65rem 0.85rem', fontSize: '0.72rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        {/* Brand / Title Header */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.25rem 0.5rem 1.15rem',
+            borderBottom: '1px solid #F1F5F9',
+            marginBottom: '1rem',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                background: 'linear-gradient(135deg, #4f46e5, #6366f1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#ffffff',
+                flexShrink: 0,
+              }}
+            >
+              <ShieldCheck size={18} />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.94rem', fontWeight: 800, color: '#111827', lineHeight: 1.2 }}>
+                Admin Portal
+              </div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 600, color: '#6B7280', textTransform: 'uppercase' }}>
+                Recruitment
+              </div>
+            </div>
+          </div>
+
+          {isMobileView && onCloseMobile && (
+            <button
+              onClick={onCloseMobile}
+              type="button"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '32px',
+                height: '32px',
+                borderRadius: '6px',
+                border: '1px solid #E2E8F0',
+                backgroundColor: '#F8FAFC',
+                color: '#64748B',
+                cursor: 'pointer',
+              }}
+              aria-label="Close navigation"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
+
+        <div
+          style={{
+            padding: '0 0.65rem 0.65rem',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            color: '#9CA3AF',
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+          }}
+        >
           Navigation
         </div>
 
@@ -77,6 +143,11 @@ export const AdminSidebar: React.FC = () => {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => {
+                  if (isMobileView && onCloseMobile) {
+                    onCloseMobile();
+                  }
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -152,6 +223,72 @@ export const AdminSidebar: React.FC = () => {
           <span>Sign Out</span>
         </button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* 1. Desktop Fixed Stationary Sidebar */}
+      <aside
+        className="admin-desktop-sidebar admin-sidebar-scroll"
+        style={{
+          width: '240px',
+          backgroundColor: '#FFFFFF',
+          borderRight: '1px solid #E5E7EB',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          flexShrink: 0,
+          height: '100vh',
+          maxHeight: '100vh',
+          overflowY: 'auto',
+          padding: '1.25rem 0.85rem',
+        }}
+      >
+        {renderSidebarContent(false)}
+      </aside>
+
+      {/* 2. Mobile Responsive Drawer & Backdrop */}
+      {isMobileOpen && (
+        <>
+          <div
+            className="admin-mobile-sidebar-backdrop"
+            onClick={onCloseMobile}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(15, 23, 42, 0.45)',
+              backdropFilter: 'blur(3px)',
+              zIndex: 50,
+            }}
+          />
+          <aside
+            className="admin-mobile-sidebar-drawer admin-sidebar-scroll"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              width: '260px',
+              backgroundColor: '#FFFFFF',
+              boxShadow: '4px 0 24px rgba(0, 0, 0, 0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              height: '100vh',
+              maxHeight: '100vh',
+              overflowY: 'auto',
+              padding: '1.25rem 0.85rem',
+              zIndex: 60,
+            }}
+          >
+            {renderSidebarContent(true)}
+          </aside>
+        </>
+      )}
+    </>
   );
 };

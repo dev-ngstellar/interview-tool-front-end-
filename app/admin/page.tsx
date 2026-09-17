@@ -906,15 +906,15 @@ export default function AdminPortalPage() {
           </div>
 
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.86rem' }}>
+            <table style={{ width: '100%', minWidth: '820px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.86rem' }}>
               <thead>
                 <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '1px solid #E2E8F0', color: '#475569' }}>
-                  <th style={{ padding: '0.75rem 1rem' }}>Candidate</th>
-                  <th style={{ padding: '0.75rem 1rem' }}>Student ID</th>
-                  <th style={{ padding: '0.75rem 1rem' }}>Round 1</th>
-                  <th style={{ padding: '0.75rem 1rem' }}>Round 2</th>
-                  <th style={{ padding: '0.75rem 1rem' }}>Overall Status</th>
-                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Action</th>
+                  <th style={{ padding: '0.75rem 1rem', minWidth: '180px' }}>Candidate</th>
+                  <th style={{ padding: '0.75rem 1rem', minWidth: '110px' }}>Student ID</th>
+                  <th style={{ padding: '0.75rem 1rem', minWidth: '150px' }}>Round 1</th>
+                  <th style={{ padding: '0.75rem 1rem', minWidth: '150px' }}>Round 2</th>
+                  <th style={{ padding: '0.75rem 1rem', minWidth: '130px' }}>Overall Status</th>
+                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right', minWidth: '90px' }}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -925,61 +925,101 @@ export default function AdminPortalPage() {
                     </td>
                   </tr>
                 ) : (
-                  stats.recentCandidates.map((c) => (
-                    <tr key={c.applicationId} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                      <td style={{ padding: '0.85rem 1rem' }}>
-                        <div style={{ fontWeight: 700, color: '#0F172A' }}>{c.name}</div>
-                        <div style={{ fontSize: '0.76rem', color: '#64748B' }}>{c.email}</div>
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem' }}>
-                        <span style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.82rem', color: '#4F46E5', backgroundColor: '#EEF2FF', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
-                          {c.studentId || '-'}
-                        </span>
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem' }}>
-                        {c.round1.score !== null ? (
-                          <span>
-                            <strong>{c.round1.score}/{c.round1.total || 15}</strong> ({c.round1.percentage}%)
+                  stats.recentCandidates.map((c) => {
+                    const isR1Passed = c.round1?.status === 'PASSED';
+                    const isR2Passed = c.round2?.status === 'PASSED' || c.overallStatus === 'QUALIFIED';
+
+                    // Round 1 status label
+                    const r1StatusLabel = c.round1?.status || 'PENDING';
+
+                    // Round 2 status label
+                    let r2StatusLabel = c.round2?.status || 'PENDING';
+                    if (isR2Passed) {
+                      r2StatusLabel = 'QUALIFIED';
+                    } else if (c.round2?.status === 'FAILED' || c.overallStatus === 'COMMUNICATION_FAILED') {
+                      r2StatusLabel = 'FAILED';
+                    } else if (c.round2?.status === 'IN_PROGRESS' || c.overallStatus === 'COMMUNICATION_IN_PROGRESS') {
+                      r2StatusLabel = 'IN_PROGRESS';
+                    } else if (c.isOverridden || c.overallStatus === 'ADMIN_APPROVED') {
+                      r2StatusLabel = 'APPROVED';
+                    } else if (c.round2?.status === 'NOT_ELIGIBLE') {
+                      r2StatusLabel = 'NOT_ELIGIBLE';
+                    }
+
+                    return (
+                      <tr key={c.applicationId} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                        <td style={{ padding: '0.85rem 1rem' }}>
+                          <div style={{ fontWeight: 700, color: '#0F172A' }}>{c.name}</div>
+                          <div style={{ fontSize: '0.76rem', color: '#64748B' }}>{c.email}</div>
+                        </td>
+                        <td style={{ padding: '0.85rem 1rem' }}>
+                          <span style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.82rem', color: '#4F46E5', backgroundColor: '#EEF2FF', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                            {c.studentId || '-'}
                           </span>
-                        ) : (
-                          <span style={{ color: '#94A3B8' }}>-</span>
-                        )}
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem' }}>
-                        {c.round2.score !== null ? (
-                          <span>
-                            <strong>{c.round2.score}/{c.round2.total || 15}</strong> ({c.round2.percentage}%)
-                          </span>
-                        ) : (
-                          <span style={{ color: '#94A3B8' }}>-</span>
-                        )}
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem' }}>
-                        <StatusBadge status={c.overallStatus} />
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}>
-                        <button
-                          onClick={() => {
-                            setSelectedApplicationIdForDetails(c.applicationId);
-                            setIsDetailsDrawerOpen(true);
-                          }}
-                          type="button"
-                          style={{
-                            padding: '0.35rem 0.65rem',
-                            borderRadius: '6px',
-                            border: '1px solid #E2E8F0',
-                            backgroundColor: '#FFFFFF',
-                            color: '#475569',
-                            fontSize: '0.78rem',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                          }}
-                        >
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))
+                        </td>
+                        {/* Round 1 */}
+                        <td style={{ padding: '0.85rem 1rem', color: '#0F172A' }}>
+                          {c.round1 && c.round1.score !== null ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'flex-start' }}>
+                              <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '0.88rem', lineHeight: 1.2 }}>
+                                {c.round1.score}/{c.round1.total || 15}{' '}
+                                <span style={{ fontSize: '0.78rem', color: isR1Passed ? '#15803D' : '#B91C1C', fontWeight: 600 }}>
+                                  ({c.round1.percentage}%)
+                                </span>
+                              </div>
+                              <StatusBadge status={r1StatusLabel} />
+                            </div>
+                          ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'flex-start' }}>
+                              <StatusBadge status={r1StatusLabel} />
+                            </div>
+                          )}
+                        </td>
+                        {/* Round 2 */}
+                        <td style={{ padding: '0.85rem 1rem', color: '#0F172A' }}>
+                          {c.round2 && c.round2.score !== null ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'flex-start' }}>
+                              <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '0.88rem', lineHeight: 1.2 }}>
+                                {c.round2.score}/{c.round2.total || 15}{' '}
+                                <span style={{ fontSize: '0.78rem', color: isR2Passed ? '#15803D' : '#B91C1C', fontWeight: 600 }}>
+                                  ({c.round2.percentage}%)
+                                </span>
+                              </div>
+                              <StatusBadge status={r2StatusLabel} />
+                            </div>
+                          ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'flex-start' }}>
+                              <StatusBadge status={r2StatusLabel} />
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: '0.85rem 1rem' }}>
+                          <StatusBadge status={c.overallStatus} />
+                        </td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}>
+                          <button
+                            onClick={() => {
+                              setSelectedApplicationIdForDetails(c.applicationId);
+                              setIsDetailsDrawerOpen(true);
+                            }}
+                            type="button"
+                            style={{
+                              padding: '0.35rem 0.65rem',
+                              borderRadius: '6px',
+                              border: '1px solid #E2E8F0',
+                              backgroundColor: '#FFFFFF',
+                              color: '#475569',
+                              fontSize: '0.78rem',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                            }}
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>

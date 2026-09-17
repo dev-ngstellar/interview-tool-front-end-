@@ -1,9 +1,13 @@
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { LogOut, User, Shield } from 'lucide-react';
+import { LogOut, User, Shield, Menu } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export const AdminHeader: React.FC = () => {
+interface AdminHeaderProps {
+  onToggleMobileMenu?: () => void;
+}
+
+export const AdminHeader: React.FC<AdminHeaderProps> = ({ onToggleMobileMenu }) => {
   const { user, logout } = useAuth();
   const router = useRouter();
 
@@ -21,14 +25,36 @@ export const AdminHeader: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 2rem',
-        position: 'sticky',
-        top: 0,
+        padding: '0 1.5rem',
+        flexShrink: 0,
         zIndex: 40,
         boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        {onToggleMobileMenu && (
+          <button
+            onClick={onToggleMobileMenu}
+            type="button"
+            className="admin-mobile-menu-btn"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              borderRadius: '8px',
+              backgroundColor: '#F8FAFC',
+              border: '1px solid #E2E8F0',
+              color: '#334155',
+              cursor: 'pointer',
+              marginRight: '0.25rem',
+            }}
+            aria-label="Toggle navigation menu"
+          >
+            <Menu size={18} />
+          </button>
+        )}
         <div
           style={{
             width: '32px',
@@ -39,6 +65,7 @@ export const AdminHeader: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             color: '#ffffff',
+            flexShrink: 0,
           }}
         >
           <Shield size={18} />

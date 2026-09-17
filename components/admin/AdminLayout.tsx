@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { AdminHeader } from './AdminHeader';
@@ -15,12 +15,26 @@ interface AdminLayoutProps {
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { user, role, loading } = useAuth();
   const router = useRouter();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && (!user || role !== 'ADMIN')) {
       router.push('/admin');
     }
   }, [user, role, loading, router]);
+
+  // Prevent browser window / document body from creating double vertical scrollbars
+  useEffect(() => {
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -47,20 +61,57 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#F8FAFC' }}>
-      <AdminHeader />
-      <div style={{ display: 'flex', flex: 1, minHeight: 'calc(100vh - 64px)' }}>
-        <AdminSidebar />
+    <div
+      className="admin-layout-root"
+      style={{
+        height: '100vh',
+        maxHeight: '100vh',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'row',
+        backgroundColor: '#F8FAFC',
+        overflow: 'hidden',
+        width: '100vw',
+        maxWidth: '100vw',
+      }}
+    >
+      {/* 1. Fixed Stationary Sidebar (stays visible while main area scrolls) */}
+      <AdminSidebar
+        isMobileOpen={isMobileOpen}
+        onCloseMobile={() => setIsMobileOpen(false)}
+      />
+
+      {/* 2. Main Area (Fixed Header + Scrollable Dashboard Content) */}
+      <div
+        className="admin-main-area"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          minWidth: 0,
+          height: '100vh',
+          maxHeight: '100vh',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Fixed Header/Navbar (stays stationary at top of main area) */}
+        <AdminHeader onToggleMobileMenu={() => setIsMobileOpen(!isMobileOpen)} />
+
+        {/* Scrollable Dashboard Content (only this section scrolls vertically) */}
         <main
+          className="admin-scrollable-content"
           style={{
             flex: 1,
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            minHeight: 0,
             padding: '1.75rem 2rem',
-            maxWidth: '1500px',
             width: '100%',
-            overflowX: 'auto',
           }}
         >
-          {children}
+          <div style={{ maxWidth: '1500px', margin: '0 auto', width: '100%' }}>
+            {children}
+          </div>
         </main>
       </div>
     </div>

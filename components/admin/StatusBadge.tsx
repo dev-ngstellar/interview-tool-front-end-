@@ -33,11 +33,11 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'sm' })
     text = '#047857';
     border = '#a7f3d0';
     label = 'QUALIFIED';
-  } else if (norm === 'ADMIN_APPROVED' || norm === 'ROUND 2 APPROVED') {
+  } else if (norm === 'ADMIN_APPROVED' || norm === 'ROUND 2 APPROVED' || norm === 'APPROVED') {
     bg = '#ede9fe';
     text = '#6d28d9';
     border = '#ddd6fe';
-    label = 'ROUND 2 APPROVED';
+    label = norm === 'APPROVED' ? 'APPROVED' : 'ROUND 2 APPROVED';
   } else if (norm === 'ADMIN_REVIEW') {
     bg = '#fef3c7';
     text = '#b45309';
@@ -53,11 +53,16 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'sm' })
     text = '#64748b';
     border = '#e2e8f0';
     label = 'PENDING';
-  } else if (norm === 'NOT_ELIGIBLE' || norm === '-') {
+  } else if (norm === 'NOT_ELIGIBLE') {
     bg = '#f8fafc';
-    text = '#94a3b8';
+    text = '#64748b';
     border = '#e2e8f0';
-    label = '-';
+    label = 'NOT ELIGIBLE';
+  } else if (norm === '-') {
+    bg = '#f8fafc';
+    text = '#64748b';
+    border = '#e2e8f0';
+    label = 'PENDING';
   }
 
   const isSmall = size === 'sm';
