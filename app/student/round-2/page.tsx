@@ -71,7 +71,7 @@ export default function StudentRound2Page() {
   // Dynamic configuration from backend
   const [durationMinutes, setDurationMinutes] = useState<number>(20);
   const [passPercentage, setPassPercentage] = useState<number>(75);
-  const [assessmentTitle, setAssessmentTitle] = useState<string>('English Vocabulary & Communication');
+  const [assessmentTitle, setAssessmentTitle] = useState<string>('ROUND 2 — ENGLISH COMMUNICATION & VERBAL ABILITY');
 
   // Authoritative monotonic timer synchronization refs
   const [remainingMs, setRemainingMs] = useState<number>(20 * 60 * 1000);
@@ -601,7 +601,7 @@ export default function StudentRound2Page() {
         new CustomEvent('assessment-header-update', {
           detail: {
             isActive: true,
-            roundTitle: 'ROUND 2 • ENGLISH VOCABULARY & COMMUNICATION',
+            roundTitle: 'ROUND 2 — ENGLISH COMMUNICATION & VERBAL ABILITY',
             timeRemaining: formattedTime,
             isUrgent,
             isWarning,
@@ -1142,6 +1142,31 @@ export default function StudentRound2Page() {
         onContextMenu={(e) => e.preventDefault()}
         onDragStart={(e) => e.preventDefault()}
       >
+        {/* Assessment Heading */}
+        <div style={{ marginBottom: '0.85rem' }}>
+          <div
+            style={{
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              color: '#64748b',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+            }}
+          >
+            MARKETING EXECUTIVE
+          </div>
+          <h1
+            style={{
+              fontSize: '1.25rem',
+              fontWeight: 800,
+              color: '#0f172a',
+              margin: '0.15rem 0 0 0',
+            }}
+          >
+            ROUND 2 — ENGLISH COMMUNICATION & VERBAL ABILITY
+          </h1>
+        </div>
+
         {/* Compact Progress Indicator & Visual Navigator */}
         <div style={{ marginBottom: '0.85rem' }}>
           <div
@@ -1321,8 +1346,13 @@ export default function StudentRound2Page() {
 
             {/* Options List: Candidate can freely select and change answer while on current question */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              {activeQuestion.options?.map((opt) => {
+              {activeQuestion.options?.map((opt, optIdx) => {
                 const isSelected = selectedOptionId === opt.id;
+                const optionLetters = ['A', 'B', 'C', 'D'];
+                const letter =
+                  optionLetters[opt.order ? opt.order - 1 : optIdx] ||
+                  optionLetters[optIdx] ||
+                  '';
 
                 return (
                   <button
@@ -1369,6 +1399,14 @@ export default function StudentRound2Page() {
                         fontWeight: isSelected ? 600 : 400,
                       }}
                     >
+                      <strong
+                        style={{
+                          marginRight: '0.45rem',
+                          color: isSelected ? 'var(--accent-primary)' : '#475569',
+                        }}
+                      >
+                        {letter}.
+                      </strong>
                       {opt.optionText}
                     </span>
                   </button>
@@ -1545,19 +1583,19 @@ export default function StudentRound2Page() {
           }}
         >
           <Sparkles size={14} color="var(--accent-primary)" />
-          <span>MARKETING EXECUTIVE • ROUND 2</span>
+          <span>MARKETING EXECUTIVE</span>
         </div>
 
         <h1
           style={{
-            fontSize: 'clamp(2rem, 4vw, 2.6rem)',
+            fontSize: 'clamp(1.8rem, 3.6vw, 2.4rem)',
             fontWeight: 800,
             letterSpacing: '-0.025em',
             marginBottom: '0.5rem',
             color: '#111827',
           }}
         >
-          {assessmentTitle}
+          ROUND 2 — ENGLISH COMMUNICATION & VERBAL ABILITY
         </h1>
 
         <p style={{ fontSize: '1.05rem', color: '#4b5563' }}>
@@ -1729,7 +1767,7 @@ export default function StudentRound2Page() {
         isOpen={showPreExamModal}
         onEnterFullscreen={handleConfirmStartFullscreen}
         driveName="Marketing Executive Recruitment Drive"
-        roundName="Round 2 • English Vocabulary & Communication"
+        roundName="ROUND 2 — ENGLISH COMMUNICATION & VERBAL ABILITY"
       />
     </div>
   );
